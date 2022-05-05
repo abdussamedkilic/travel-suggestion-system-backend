@@ -43,7 +43,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceDto getPlaceById(String placeId) {
-        Optional<Place> place = placeRepository.findById(placeId);
+        Optional<Place> place = Optional.of(placeRepository.findById(placeId).orElseThrow());
         return BaseMapper.map(place.get(), PlaceDto.class);
     }
 
@@ -53,5 +53,11 @@ public class PlaceServiceImpl implements PlaceService {
         PlaceDto placeDto = BaseMapper.map(placeRepository.findById(placeId), PlaceDto.class);
         placeRepository.deleteById(placeId);
         return placeDto;
+    }
+
+    @Override
+    public PlaceDto getByName(String name) {
+        Place place = placeRepository.findByName(name);
+        return BaseMapper.map(place,PlaceDto.class);
     }
 }

@@ -54,4 +54,10 @@ public class PlaceController {
         return new ResponseEntity<>(place, HttpStatus.OK);
     }
 
+    @GetMapping("/name/{placeName}")
+    public ResponseEntity<PlaceDto> getPlaceByPlaceName(@PathVariable String placeName){
+        PlaceDto place = placeService.getByName(placeName);
+        return new ResponseEntity<>(place,HttpStatus.OK);
+    }
+
 }

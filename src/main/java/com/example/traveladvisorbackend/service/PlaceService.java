@@ -16,4 +16,6 @@ public interface PlaceService {
     PlaceDto getPlaceById(String placeId);
 
     PlaceDto deletePlace(String placeId);
+
+    PlaceDto getByName(String name);
 }
