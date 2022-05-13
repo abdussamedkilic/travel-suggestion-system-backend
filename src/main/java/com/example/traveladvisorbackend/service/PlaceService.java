@@ -1,6 +1,7 @@
 package com.example.traveladvisorbackend.service;
 
 import com.example.traveladvisorbackend.dto.PlaceDto;
+import com.example.traveladvisorbackend.dto.PlaceWithTagDto;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface PlaceService {
     PlaceDto deletePlace(String placeId);
 
     PlaceDto getByName(String name);
+
+    PlaceWithTagDto getPlacesByTag();
+
+    List<PlaceDto> getPlaceByCityName(String name);
 }

@@ -1,8 +1,10 @@
 package com.example.traveladvisorbackend.service.impl;
 
 import com.example.traveladvisorbackend.dto.PlaceDto;
+import com.example.traveladvisorbackend.dto.PlaceWithTagDto;
 import com.example.traveladvisorbackend.dto.mapper.BaseMapper;
 import com.example.traveladvisorbackend.model.Place;
+import com.example.traveladvisorbackend.model.PlaceType;
 import com.example.traveladvisorbackend.repository.PlaceRepository;
 import com.example.traveladvisorbackend.service.PlaceService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public void addPlaceMulti(List<PlaceDto> placeDtoList) {
-        List<Place> places = BaseMapper.mapAll(placeDtoList,Place.class);
+        List<Place> places = BaseMapper.mapAll(placeDtoList, Place.class);
         placeRepository.insert(places);
     }
 
@@ -58,6 +60,22 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public PlaceDto getByName(String name) {
         Place place = placeRepository.findByName(name);
-        return BaseMapper.map(place,PlaceDto.class);
+        return BaseMapper.map(place, PlaceDto.class);
+    }
+
+    @Override
+    public PlaceWithTagDto getPlacesByTag() {
+        List<PlaceDto> doingPlaces = BaseMapper.mapAll(placeRepository.findPlaceByType(PlaceType.DO), PlaceDto.class);
+        List<PlaceDto> eatingPlaces = BaseMapper.mapAll(placeRepository.findPlaceByType(PlaceType.EAT), PlaceDto.class);
+        List<PlaceDto> stayingPlaces = BaseMapper.mapAll(placeRepository.findPlaceByType(PlaceType.STAY), PlaceDto.class);
+
+        return PlaceWithTagDto.builder()
+                .doingPlaces(doingPlaces).stayingPlaces(stayingPlaces).eatingPlaces(eatingPlaces).build();
+
+    }
+
+    @Override
+    public List<PlaceDto> getPlaceByCityName(String name) {
+        return BaseMapper.mapAll(placeRepository.findPlaceByLocation(name), PlaceDto.class);
     }
 }

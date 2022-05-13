@@ -1,6 +1,7 @@
 package com.example.traveladvisorbackend.controller;
 
 import com.example.traveladvisorbackend.dto.PlaceDto;
+import com.example.traveladvisorbackend.dto.PlaceWithTagDto;
 import com.example.traveladvisorbackend.service.PlaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,9 +56,21 @@ public class PlaceController {
     }
 
     @GetMapping("/name/{placeName}")
-    public ResponseEntity<PlaceDto> getPlaceByPlaceName(@PathVariable String placeName){
+    public ResponseEntity<PlaceDto> getPlaceByPlaceName(@PathVariable String placeName) {
         PlaceDto place = placeService.getByName(placeName);
-        return new ResponseEntity<>(place,HttpStatus.OK);
+        return new ResponseEntity<>(place, HttpStatus.OK);
+    }
+
+    @GetMapping("/places/tag")
+    public ResponseEntity<PlaceWithTagDto> getPlaceListByTag() {
+        PlaceWithTagDto places = placeService.getPlacesByTag();
+        return new ResponseEntity<>(places, HttpStatus.OK);
+    }
+
+    @GetMapping("/places/city/{city}")
+    public ResponseEntity<List<PlaceDto>> getPlaceListByCity(@PathVariable String city) {
+        List<PlaceDto> places = placeService.getPlaceByCityName(city);
+        return new ResponseEntity<>(places, HttpStatus.OK);
     }
 
 }
