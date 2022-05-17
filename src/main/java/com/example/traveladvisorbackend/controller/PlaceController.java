@@ -37,7 +37,7 @@ public class PlaceController {
         return new ResponseEntity<>(placeDto, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/places/allPlaces/")
     public ResponseEntity<List<PlaceDto>> getAllPlaces() {
         List<PlaceDto> placeDtoList = placeService.getAllPlaces();
         return new ResponseEntity<>(placeDtoList, HttpStatus.OK);
