@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/place")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class PlaceController {
 
@@ -37,8 +38,6 @@ public class PlaceController {
         return new ResponseEntity<>(placeDto, HttpStatus.OK);
     }
 
-
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/places/allPlaces/")
     public ResponseEntity<List<PlaceDto>> getAllPlaces() {
         List<PlaceDto> placeDtoList = placeService.getAllPlaces();
