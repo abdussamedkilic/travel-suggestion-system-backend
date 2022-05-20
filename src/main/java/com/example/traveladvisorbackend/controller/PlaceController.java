@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/place")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class PlaceController {
 
@@ -37,8 +38,6 @@ public class PlaceController {
         return new ResponseEntity<>(placeDto, HttpStatus.OK);
     }
 
-
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/places/allPlaces/")
     public ResponseEntity<List<PlaceDto>> getAllPlaces() {
         List<PlaceDto> placeDtoList = placeService.getAllPlaces();
@@ -73,6 +72,13 @@ public class PlaceController {
     public ResponseEntity<List<PlaceDto>> getPlaceListByCity(@PathVariable String city) {
         List<PlaceDto> places = placeService.getPlaceByCityName(city);
         return new ResponseEntity<>(places, HttpStatus.OK);
+    }
+
+    @GetMapping("/top10similar/{cityName}/{placeName}")
+    public ResponseEntity<List<PlaceDto>> getSimilarPlacesByCityNameAndPlaceName(@PathVariable String cityName,
+                                                                                 @PathVariable String placeName){
+        List<PlaceDto> places = placeService.getSimilarPlaceByCityName(cityName,placeName);
+        return new ResponseEntity<>(places,HttpStatus.OK);
     }
 
 }
