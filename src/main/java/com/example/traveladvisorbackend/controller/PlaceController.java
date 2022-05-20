@@ -74,4 +74,11 @@ public class PlaceController {
         return new ResponseEntity<>(places, HttpStatus.OK);
     }
 
+    @GetMapping("/top10similar/{cityName}/{placeName}")
+    public ResponseEntity<List<PlaceDto>> getSimilarPlacesByCityNameAndPlaceName(@PathVariable String cityName,
+                                                                                 @PathVariable String placeName){
+        List<PlaceDto> places = placeService.getSimilarPlaceByCityName(cityName,placeName);
+        return new ResponseEntity<>(places,HttpStatus.OK);
+    }
+
 }

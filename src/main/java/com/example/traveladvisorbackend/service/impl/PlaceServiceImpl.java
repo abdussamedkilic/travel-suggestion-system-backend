@@ -2,6 +2,7 @@ package com.example.traveladvisorbackend.service.impl;
 
 import com.example.traveladvisorbackend.dto.PlaceDto;
 import com.example.traveladvisorbackend.dto.PlaceWithTagDto;
+import com.example.traveladvisorbackend.dto.SuggestData;
 import com.example.traveladvisorbackend.dto.mapper.BaseMapper;
 import com.example.traveladvisorbackend.model.Place;
 import com.example.traveladvisorbackend.model.PlaceType;
@@ -9,10 +10,18 @@ import com.example.traveladvisorbackend.repository.PlaceRepository;
 import com.example.traveladvisorbackend.service.PlaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,6 +29,10 @@ import java.util.Optional;
 public class PlaceServiceImpl implements PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final RestTemplate restTemplate;
+
+    @Value("${app.suggest_url}")
+    private String suggestUrl;
 
     @Override
     public void addPlace(PlaceDto placeDto) {
@@ -77,5 +90,25 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<PlaceDto> getPlaceByCityName(String name) {
         return BaseMapper.mapAll(placeRepository.findPlaceByLocation(name), PlaceDto.class);
+    }
+
+    @Override
+    public List<PlaceDto> getSimilarPlaceByCityName(String cityName, String placeName) {
+        SuggestData suggestData = getPlaceList(cityName, placeName);
+        List<Place> places = suggestData.getTop_ten_names().stream().map(placeRepository::findByName)
+                .collect(Collectors.toList());
+        return BaseMapper.mapAll(places, PlaceDto.class);
+    }
+
+    private SuggestData getPlaceList(String cityName, String placeName) {
+        final String url = suggestUrl + cityName + "/" + placeName;
+        ResponseEntity<SuggestData> response = restTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<>() {
+                });
+        if (response.hasBody()) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            return (SuggestData) Collections.emptyList();
+        }
     }
 }

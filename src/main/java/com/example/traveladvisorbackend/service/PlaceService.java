@@ -23,4 +23,6 @@ public interface PlaceService {
     PlaceWithTagDto getPlacesByTag();
 
     List<PlaceDto> getPlaceByCityName(String name);
+
+    List<PlaceDto> getSimilarPlaceByCityName(String cityName,String placeName);
 }
